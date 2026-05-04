@@ -59,3 +59,4 @@ def vista_perfil(request):
     else:
         form = ActualizarPerfilForm(instance=perfil, user=request.user)
     return render(request, 'accounts/perfil.html', {'usuario': request.user, 'form': form, 'perfil': perfil})
+# Épica 1: Gestión de Acceso y Perfiles — HU-01, HU-02, RF-01, RF-02
