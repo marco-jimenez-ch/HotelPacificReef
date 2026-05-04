@@ -89,4 +89,4 @@ def detalle_habitacion(request, pk):
     return render(request, "habitaciones/detalle.html", {
         "habitacion": habitacion,
         "hoy": date.today().isoformat(),
-    })
+    })# Épica 2: Motor de Reservas y Catálogo — HU-04, HU-05, HU-06, RF-03, RF-04, RF-05
