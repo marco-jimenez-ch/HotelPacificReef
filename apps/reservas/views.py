@@ -55,3 +55,4 @@ def cancelar_reserva(request, reserva_id):
         messages.warning(request, f'Reserva #{reserva.id} cancelada.')
         return redirect('mis_reservas')
     return render(request, 'reservas/cancelar.html', {'reserva': reserva})
+# Épica 2: Registro de reserva por días — HU-06, RF-05
