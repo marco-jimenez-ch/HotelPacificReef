@@ -68,3 +68,4 @@ def reportes(request):
         'ocupacion_por_tipo': ocupacion_por_tipo,
         'ingresos_por_tipo': ingresos_por_tipo,
     })
+# Épica 4: Administración y Reportes — HU-09, HU-10, HU-11, RF-08, RF-10, RF-11
