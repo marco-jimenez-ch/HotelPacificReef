@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% block title %}Nueva Reserva — Hotel Pacific Reef{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <nav aria-label="breadcrumb" class="mb-4">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">Inicio</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'lista_habitaciones' %}">Habitaciones</a></li>
+        <li class="breadcrumb-item active">Nueva Reserva</li>
+      </ol>
+    </nav>
+
+    <div class="card border-0 shadow">
+      <div class="card-header bg-primary text-white py-3">
+        <h4 class="mb-0"><i class="bi bi-calendar-plus me-2"></i>Nueva Reserva</h4>
+      </div>
+      <div class="card-body p-4">
+        {% if habitacion %}
+        <div class="alert alert-primary mb-4">
+          <strong><i class="bi bi-door-open me-2"></i>{{ habitacion.get_tipo_display }} — Habitación {{ habitacion.numero }}</strong>
+          <br><small>${{ habitacion.precio_por_noche|floatformat:0 }}/noche · Capacidad: {{ habitacion.capacidad }} personas</small>
+        </div>
+        {% endif %}
+
+        <form method="post">
+          {% csrf_token %}
+          <div class="row g-3">
+            {% if not habitacion %}
+            <div class="col-12">
+              <label class="form-label fw-semibold">Habitación</label>
+              {{ form.habitacion }}
+              {% if form.habitacion.errors %}<div class="text-danger small">{{ form.habitacion.errors.0 }}</div>{% endif %}
+            </div>
+            {% else %}
+              <input type="hidden" name="habitacion" value="{{ habitacion.pk }}">
+            {% endif %}
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Fecha de entrada</label>
+              {{ form.fecha_entrada }}
+              {% if form.fecha_entrada.errors %}<div class="text-danger small">{{ form.fecha_entrada.errors.0 }}</div>{% endif %}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Fecha de salida</label>
+              {{ form.fecha_salida }}
+              {% if form.fecha_salida.errors %}<div class="text-danger small">{{ form.fecha_salida.errors.0 }}</div>{% endif %}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Número de huéspedes</label>
+              {{ form.num_huespedes }}
+              {% if form.num_huespedes.errors %}<div class="text-danger small">{{ form.num_huespedes.errors.0 }}</div>{% endif %}
+            </div>
+          </div>
+
+          {% if form.non_field_errors %}
+            <div class="alert alert-danger mt-3">
+              {% for error in form.non_field_errors %}
+                <div>{{ error }}</div>
+              {% endfor %}
+            </div>
+          {% endif %}
+
+          <div class="alert alert-warning mt-4 small">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            Al confirmar, deberás pagar una <strong>garantía del 30%</strong> del costo total de la estadía.
+          </div>
+
+          <div class="d-grid gap-2 mt-3">
+            <button type="submit" class="btn btn-primary btn-lg">
+              <i class="bi bi-check-circle me-2"></i>Continuar al Pago
+            </button>
+            <a href="{% url 'lista_habitaciones' %}" class="btn btn-outline-secondary">Cancelar</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

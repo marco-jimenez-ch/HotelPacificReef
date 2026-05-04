@@ -1,0 +1,71 @@
+{% load static %}
+<nav class="navbar navbar-expand-lg navbar-premium sticky-top">
+  <div class="container">
+    <a class="navbar-brand-premium" href="{% url 'home' %}">
+      <i class="bi bi-water me-2"></i>Pacific Reef
+    </a>
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain"
+            style="color:rgba(255,255,255,0.8);">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarMain">
+      <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-1">
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'home' %}"><i class="bi bi-house me-1"></i>Inicio</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'lista_habitaciones' %}"><i class="bi bi-door-open me-1"></i>Habitaciones</a>
+        </li>
+        {% if user.is_authenticated %}
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'mis_reservas' %}"><i class="bi bi-calendar-check me-1"></i>Mis Reservas</a>
+        </li>
+        {% endif %}
+        {% if user.is_authenticated %}
+          {% with perfil=user.perfil %}
+          {% if user.is_superuser or perfil.rol == 'admin' %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'dashboard' %}"><i class="bi bi-speedometer2 me-1"></i>Panel Admin</a>
+          </li>
+          {% endif %}
+          {% endwith %}
+        {% endif %}
+      </ul>
+      <ul class="navbar-nav align-items-center gap-2">
+        {% if user.is_authenticated %}
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" href="#" data-bs-toggle="dropdown">
+            <span class="rounded-circle bg-white text-primary d-inline-flex align-items-center justify-content-center"
+                  style="width:32px;height:32px;font-weight:700;font-size:0.85rem;">
+              {{ user.first_name|slice:":1"|upper|default:user.email|slice:":1"|upper }}
+            </span>
+            <span>{{ user.first_name|default:user.email }}</span>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="{% url 'perfil' %}"><i class="bi bi-person me-2 text-primary"></i>Mi Perfil</a></li>
+            <li><a class="dropdown-item" href="{% url 'mis_reservas' %}"><i class="bi bi-calendar-check me-2 text-primary"></i>Mis Reservas</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+              <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="dropdown-item text-danger">
+                  <i class="bi bi-box-arrow-right me-2"></i>Cerrar Sesión
+                </button>
+              </form>
+            </li>
+          </ul>
+        </li>
+        {% else %}
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'login' %}"><i class="bi bi-box-arrow-in-right me-1"></i>Iniciar Sesión</a>
+        </li>
+        <li class="nav-item">
+          <a class="btn-nav-register nav-link" href="{% url 'registro' %}">
+            <i class="bi bi-person-plus me-1"></i>Registrarse
+          </a>
+        </li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>

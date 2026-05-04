@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% block title %}Comprobante de Pago — Hotel Pacific Reef{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <div class="card border-0 shadow">
+      <div class="card-header bg-success text-white py-3 text-center">
+        <i class="bi bi-check-circle-fill me-2" style="font-size:1.5rem;"></i>
+        <h4 class="d-inline">Pago Confirmado — Comprobante</h4>
+      </div>
+      <div class="card-body p-4">
+        <div class="row align-items-center">
+          <div class="col-md-6">
+            <h5 class="fw-bold mb-3"><i class="bi bi-receipt me-2 text-success"></i>Detalles de la Reserva</h5>
+            <table class="table table-sm table-bordered">
+              <tbody>
+                <tr><td class="fw-semibold">N° Reserva</td><td>#{{ reserva.id }}</td></tr>
+                <tr><td class="fw-semibold">Cliente</td><td>{{ reserva.cliente.get_full_name|default:reserva.cliente.username }}</td></tr>
+                <tr><td class="fw-semibold">Habitación</td><td>{{ reserva.habitacion }}</td></tr>
+                <tr><td class="fw-semibold">Check-in</td><td>{{ reserva.fecha_entrada|date:"d/m/Y" }}</td></tr>
+                <tr><td class="fw-semibold">Check-out</td><td>{{ reserva.fecha_salida|date:"d/m/Y" }}</td></tr>
+                <tr><td class="fw-semibold">Noches</td><td>{{ reserva.total_noches }}</td></tr>
+                <tr class="table-success"><td class="fw-bold">Garantía pagada</td><td class="fw-bold">${{ pago.monto_garantia|floatformat:0 }}</td></tr>
+                <tr><td class="fw-semibold">Fecha de pago</td><td>{{ pago.fecha_pago|date:"d/m/Y H:i" }}</td></tr>
+                <tr><td class="fw-semibold">Cód. Transacción</td><td><code>{{ pago.codigo_transaccion }}</code></td></tr>
+                <tr><td class="fw-semibold">Estado</td>
+                  <td><span class="badge bg-success">{{ pago.get_estado_display }}</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="col-md-6 text-center">
+            <h6 class="fw-bold mb-3"><i class="bi bi-qr-code me-2"></i>Código QR de Verificación</h6>
+            {% if pago.codigo_qr %}
+              <img src="{{ pago.codigo_qr.url }}" alt="QR Reserva" class="img-fluid border rounded-3 p-2 shadow-sm" style="max-width:220px;">
+              <p class="text-muted small mt-2">Presenta este código al hacer check-in</p>
+              <a href="{{ pago.codigo_qr.url }}" download class="btn btn-outline-primary btn-sm">
+                <i class="bi bi-download me-1"></i>Descargar QR
+              </a>
+            {% else %}
+              <p class="text-muted">QR no disponible</p>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="alert alert-success mt-4">
+          <i class="bi bi-check-circle me-2"></i>
+          <strong>¡Tu reserva está confirmada!</strong> Presenta el código QR al momento del check-in el 
+          <strong>{{ reserva.fecha_entrada|date:"d/m/Y" }}</strong>.
+        </div>
+
+        <div class="d-flex gap-2 justify-content-center">
+          <a href="{% url 'mis_reservas' %}" class="btn btn-primary">
+            <i class="bi bi-list-check me-2"></i>Mis Reservas
+          </a>
+          <button onclick="window.print()" class="btn btn-outline-secondary">
+            <i class="bi bi-printer me-2"></i>Imprimir
+          </button>
+          <a href="{% url 'home' %}" class="btn btn-outline-dark">
+            <i class="bi bi-house me-2"></i>Inicio
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

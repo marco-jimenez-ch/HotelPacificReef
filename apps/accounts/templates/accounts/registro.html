@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% block title %}Crear Cuenta — Hotel Pacific Reef{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center py-3">
+  <div class="col-md-8 col-lg-7">
+    <div class="card-form">
+      <div class="card-form-header text-center" style="background: linear-gradient(135deg, #023E8A, #0077B6);">
+        <div class="mb-3">
+          <span class="rounded-circle bg-white d-inline-flex align-items-center justify-content-center"
+                style="width:56px;height:56px;">
+            <i class="bi bi-person-plus text-primary" style="font-size:1.6rem;"></i>
+          </span>
+        </div>
+        <h4 class="fw-bold text-white mb-1" style="font-family:'Playfair Display',serif;">Crear Cuenta</h4>
+        <p class="text-white-50 small mb-0">Únete a Hotel Pacific Reef</p>
+      </div>
+      <div class="p-4 bg-white">
+        <form method="post" novalidate>
+          {% csrf_token %}
+          <div class="row g-3">
+            <!-- Datos personales -->
+            <div class="col-12">
+              <p class="text-muted small fw-semibold text-uppercase mb-2" style="letter-spacing:0.08em;">
+                <i class="bi bi-person me-1"></i>Datos Personales
+              </p>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Nombre</label>
+              {{ form.first_name }}
+              {% if form.first_name.errors %}
+                <div class="text-danger small mt-1"><i class="bi bi-exclamation-circle me-1"></i>{{ form.first_name.errors.0 }}</div>
+              {% endif %}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Apellido</label>
+              {{ form.last_name }}
+              {% if form.last_name.errors %}
+                <div class="text-danger small mt-1"><i class="bi bi-exclamation-circle me-1"></i>{{ form.last_name.errors.0 }}</div>
+              {% endif %}
+            </div>
+            <div class="col-12">
+              <label class="form-label">Correo electrónico <span class="text-muted small fw-normal">(se usará para iniciar sesión)</span></label>
+              {{ form.email }}
+              {% if form.email.errors %}
+                <div class="text-danger small mt-1"><i class="bi bi-exclamation-circle me-1"></i>{{ form.email.errors.0 }}</div>
+              {% endif %}
+            </div>
+            <div class="col-12">
+              <label class="form-label">Teléfono <span class="text-muted small fw-normal">(opcional)</span></label>
+              {{ form.telefono }}
+            </div>
+
+            <!-- Documento de identidad -->
+            <div class="col-12 mt-2">
+              <p class="text-muted small fw-semibold text-uppercase mb-2" style="letter-spacing:0.08em;">
+                <i class="bi bi-card-text me-1"></i>Documento de Identidad
+              </p>
+            </div>
+            <div class="col-md-5">
+              <label class="form-label">Tipo de documento</label>
+              {{ form.tipo_documento }}
+              {% if form.tipo_documento.errors %}
+                <div class="text-danger small mt-1"><i class="bi bi-exclamation-circle me-1"></i>{{ form.tipo_documento.errors.0 }}</div>
+              {% endif %}
+            </div>
+            <div class="col-md-7">
+              <label class="form-label">Número de documento</label>
+              {{ form.numero_documento }}
+              {% if form.numero_documento.errors %}
+                <div class="text-danger small mt-1"><i class="bi bi-exclamation-circle me-1"></i>{{ form.numero_documento.errors.0 }}</div>
+              {% endif %}
+            </div>
+
+            <!-- Contraseña -->
+            <div class="col-12 mt-2">
+              <p class="text-muted small fw-semibold text-uppercase mb-2" style="letter-spacing:0.08em;">
+                <i class="bi bi-lock me-1"></i>Seguridad
+              </p>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Contraseña</label>
+              {{ form.password1 }}
+              {% if form.password1.errors %}
+                <div class="text-danger small mt-1"><i class="bi bi-exclamation-circle me-1"></i>{{ form.password1.errors.0 }}</div>
+              {% endif %}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Confirmar contraseña</label>
+              {{ form.password2 }}
+              {% if form.password2.errors %}
+                <div class="text-danger small mt-1"><i class="bi bi-exclamation-circle me-1"></i>{{ form.password2.errors.0 }}</div>
+              {% endif %}
+            </div>
+          </div>
+
+          {% if form.non_field_errors %}
+            <div class="alert alert-danger mt-3">
+              <i class="bi bi-x-circle me-2"></i>{{ form.non_field_errors.0 }}
+            </div>
+          {% endif %}
+
+          <div class="alert alert-info mt-4 small">
+            <i class="bi bi-info-circle me-2"></i>
+            Tu correo electrónico se usará para iniciar sesión. No necesitas crear un nombre de usuario.
+          </div>
+
+          <button type="submit" class="btn btn-primary w-100 py-2 mt-2 fw-semibold">
+            <i class="bi bi-person-check me-2"></i>Crear Cuenta
+          </button>
+        </form>
+        <hr class="my-4">
+        <p class="text-center text-muted small mb-0">
+          ¿Ya tienes cuenta?
+          <a href="{% url 'login' %}" class="text-decoration-none fw-semibold text-primary">Inicia sesión</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

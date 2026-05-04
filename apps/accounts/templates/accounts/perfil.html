@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% block title %}Mi Perfil — Hotel Pacific Reef{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+  <!-- Tarjeta de perfil -->
+  <div class="col-md-4">
+    <div class="card-premium text-center p-4 bg-white">
+      <div class="mb-3">
+        <span class="rounded-circle d-inline-flex align-items-center justify-content-center"
+              style="width:80px;height:80px;background:linear-gradient(135deg,#023E8A,#0077B6);">
+          <span style="font-family:'Playfair Display',serif;font-size:2rem;color:#fff;font-weight:700;">
+            {{ usuario.first_name|slice:":1"|upper|default:usuario.email|slice:":1"|upper }}
+          </span>
+        </span>
+      </div>
+      <h4 class="fw-bold mb-1">{{ usuario.get_full_name|default:usuario.email }}</h4>
+      <p class="text-muted small mb-2">{{ usuario.email }}</p>
+      {% if perfil %}
+        <span class="badge {% if perfil.rol == 'admin' %}bg-danger{% else %}bg-primary{% endif %} px-3 py-2 mb-3">
+          {{ perfil.get_rol_display }}
+        </span>
+      {% endif %}
+      <hr>
+      <div class="text-start small text-muted">
+        <p class="mb-2">
+          <i class="bi bi-calendar me-2 text-primary"></i>
+          Miembro desde {{ usuario.date_joined|date:"d/m/Y" }}
+        </p>
+        {% if perfil and perfil.telefono %}
+        <p class="mb-2">
+          <i class="bi bi-telephone me-2 text-primary"></i>{{ perfil.telefono }}
+        </p>
+        {% endif %}
+        {% if perfil and perfil.rut %}
+        <p class="mb-0">
+          <i class="bi bi-card-text me-2 text-primary"></i>
+          {{ perfil.get_tipo_documento_display }}: {{ perfil.rut }}
+        </p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Formulario de edición -->
+  <div class="col-md-8">
+    <div class="card-premium bg-white">
+      <div class="p-4 border-bottom d-flex align-items-center gap-2">
+        <i class="bi bi-pencil-square text-primary"></i>
+        <h5 class="fw-bold mb-0">Editar Perfil</h5>
+      </div>
+      <div class="p-4">
+        <form method="post">
+          {% csrf_token %}
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Nombre</label>
+              {{ form.first_name }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Apellido</label>
+              {{ form.last_name }}
+            </div>
+            <div class="col-12">
+              <label class="form-label">Correo electrónico</label>
+              {{ form.email }}
+            </div>
+            <div class="col-12">
+              <label class="form-label">Teléfono</label>
+              {{ form.telefono }}
+            </div>
+            <div class="col-md-5">
+              <label class="form-label">Tipo de documento</label>
+              {{ form.tipo_documento }}
+            </div>
+            <div class="col-md-7">
+              <label class="form-label">Número de documento</label>
+              {{ form.rut }}
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary mt-4">
+            <i class="bi bi-save me-2"></i>Guardar Cambios
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <div class="card-premium bg-white mt-4">
+      <div class="p-4 border-bottom d-flex align-items-center gap-2">
+        <i class="bi bi-calendar-check text-primary"></i>
+        <h5 class="fw-bold mb-0">Mis Reservas</h5>
+      </div>
+      <div class="p-4">
+        <a href="{% url 'mis_reservas' %}" class="btn btn-outline-primary">
+          <i class="bi bi-list-check me-2"></i>Ver todas mis reservas
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

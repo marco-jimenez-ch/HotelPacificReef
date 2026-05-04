@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% block title %}Reportes — Hotel Pacific Reef{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h2 class="fw-bold"><i class="bi bi-bar-chart me-2 text-primary"></i>Reportes de Ocupación</h2>
+  <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary">
+    <i class="bi bi-arrow-left me-1"></i>Volver al Dashboard
+  </a>
+</div>
+
+<div class="row g-4">
+  <div class="col-md-6">
+    <div class="card border-0 shadow">
+      <div class="card-header bg-primary text-white fw-bold py-3">
+        <i class="bi bi-pie-chart me-2"></i>Reservas Confirmadas por Tipo
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Tipo de Habitación</th>
+                <th>Total Reservas</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in ocupacion_por_tipo %}
+              <tr>
+                <td class="text-capitalize">
+                  <span class="badge bg-primary me-2">{{ item.habitacion__tipo }}</span>
+                  {{ item.habitacion__tipo|capfirst }}
+                </td>
+                <td><strong>{{ item.total }}</strong></td>
+              </tr>
+              {% empty %}
+              <tr><td colspan="2" class="text-center text-muted">Sin datos disponibles</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card border-0 shadow">
+      <div class="card-header bg-success text-white fw-bold py-3">
+        <i class="bi bi-cash-stack me-2"></i>Ingresos por Garantías (por Tipo)
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Tipo de Habitación</th>
+                <th>Total Ingresos (30%)</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in ingresos_por_tipo %}
+              <tr>
+                <td class="text-capitalize">{{ item.reserva__habitacion__tipo|capfirst }}</td>
+                <td><strong class="text-success">${{ item.total|floatformat:0 }}</strong></td>
+              </tr>
+              {% empty %}
+              <tr><td colspan="2" class="text-center text-muted">Sin ingresos registrados</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

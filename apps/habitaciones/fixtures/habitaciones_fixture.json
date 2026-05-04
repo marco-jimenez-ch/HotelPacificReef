@@ -1,0 +1,7 @@
+[
+  {"model": "habitaciones.habitacion", "pk": 1, "fields": {"numero": "101", "tipo": "individual", "capacidad": 1, "precio_por_noche": "50000", "disponible": true, "descripcion": "Habitación individual con vista al jardín. Cama matrimonial, TV LCD, baño privado y aire acondicionado.", "imagen": ""}},
+  {"model": "habitaciones.habitacion", "pk": 2, "fields": {"numero": "201", "tipo": "doble", "capacidad": 2, "precio_por_noche": "80000", "disponible": true, "descripcion": "Habitación doble con vista al mar. Dos camas individuales o cama king, TV LCD, minibar y baño privado.", "imagen": ""}},
+  {"model": "habitaciones.habitacion", "pk": 3, "fields": {"numero": "202", "tipo": "doble", "capacidad": 2, "precio_por_noche": "90000", "disponible": true, "descripcion": "Habitación doble premium. Cama king size, bañera de hidromasaje, vista panorámica y servicio a la habitación.", "imagen": ""}},
+  {"model": "habitaciones.habitacion", "pk": 4, "fields": {"numero": "301", "tipo": "suite", "capacidad": 3, "precio_por_noche": "150000", "disponible": true, "descripcion": "Suite con jacuzzi privado y vista panorámica al océano. Sala de estar, cama king, baño de lujo.", "imagen": ""}},
+  {"model": "habitaciones.habitacion", "pk": 5, "fields": {"numero": "302", "tipo": "suite", "capacidad": 4, "precio_por_noche": "200000", "disponible": true, "descripcion": "Suite presidencial para 4 personas. Dos habitaciones, cocina equipada, terraza privada con vista al Pacífico.", "imagen": ""}}
+]

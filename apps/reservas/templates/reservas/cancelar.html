@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}Cancelar Reserva — Hotel Pacific Reef{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <div class="card border-0 shadow border-danger">
+      <div class="card-header bg-danger text-white py-3">
+        <h4 class="mb-0"><i class="bi bi-x-circle me-2"></i>Cancelar Reserva #{{ reserva.id }}</h4>
+      </div>
+      <div class="card-body p-4">
+        <div class="alert alert-warning">
+          <i class="bi bi-exclamation-triangle me-2"></i>
+          ¿Estás seguro que deseas cancelar esta reserva? Esta acción no se puede deshacer.
+        </div>
+        <p><strong>Habitación:</strong> {{ reserva.habitacion }}</p>
+        <p><strong>Fechas:</strong> {{ reserva.fecha_entrada|date:"d/m/Y" }} → {{ reserva.fecha_salida|date:"d/m/Y" }}</p>
+        <form method="post" class="d-flex gap-2 mt-4">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger flex-grow-1">
+            <i class="bi bi-x-circle me-2"></i>Sí, Cancelar Reserva
+          </button>
+          <a href="{% url 'mis_reservas' %}" class="btn btn-outline-secondary flex-grow-1">Volver</a>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

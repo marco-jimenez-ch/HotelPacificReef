@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% block title %}Habitación {{ habitacion.numero }} — Hotel Pacific Reef{% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb" class="mb-4">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'home' %}">Inicio</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'lista_habitaciones' %}">Habitaciones</a></li>
+    <li class="breadcrumb-item active">Habitación {{ habitacion.numero }}</li>
+  </ol>
+</nav>
+
+<div class="row g-5">
+  <!-- Imagen -->
+  <div class="col-md-7">
+    <div style="border-radius:1.25rem;overflow:hidden;box-shadow:0 16px 48px rgba(0,0,0,0.14);">
+      {% if habitacion.imagen %}
+        <img src="{{ habitacion.imagen.url }}" class="img-fluid w-100"
+             alt="Habitación {{ habitacion.numero }}" style="max-height:460px;object-fit:cover;">
+      {% elif habitacion.tipo == 'suite' %}
+        <img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1200&q=80"
+             class="img-fluid w-100" alt="Suite Pacific Reef" style="max-height:460px;object-fit:cover;">
+      {% elif habitacion.tipo == 'doble' %}
+        <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80"
+             class="img-fluid w-100" alt="Habitación Doble Pacific Reef" style="max-height:460px;object-fit:cover;">
+      {% else %}
+        <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=1200&q=80"
+             class="img-fluid w-100" alt="Habitación Individual Pacific Reef" style="max-height:460px;object-fit:cover;">
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Detalle -->
+  <div class="col-md-5">
+    <span class="section-label">{{ habitacion.get_tipo_display }}</span>
+    <h2 style="font-family:'Playfair Display',serif;font-weight:700;">
+      Habitación {{ habitacion.numero }}
+    </h2>
+    <p class="text-muted mb-4" style="line-height:1.8;">{{ habitacion.descripcion }}</p>
+
+    <!-- Stats rápidas -->
+    <div class="row g-3 mb-4">
+      <div class="col-6">
+        <div class="p-3 rounded-3 text-center" style="background:#F0F7FF;">
+          <i class="bi bi-people text-primary" style="font-size:1.4rem;"></i>
+          <p class="fw-bold mb-0 mt-1">{{ habitacion.capacidad }}</p>
+          <small class="text-muted">Huéspedes máx.</small>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="p-3 rounded-3 text-center" style="background:#F0FFF4;">
+          <i class="bi bi-currency-dollar text-success" style="font-size:1.4rem;"></i>
+          <p class="fw-bold mb-0 mt-1">${{ habitacion.precio_por_noche|floatformat:0 }}</p>
+          <small class="text-muted">Por noche</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Garantía -->
+    <div class="alert alert-info mb-4">
+      <i class="bi bi-shield-check me-2"></i>
+      Se cobra una <strong>garantía del 30%</strong> del costo total al confirmar.
+      El 70% restante se paga al check-in.
+    </div>
+
+    <!-- Amenidades -->
+    <div class="mb-4">
+      <p class="fw-semibold text-muted small text-uppercase mb-2" style="letter-spacing:0.08em;">Incluye</p>
+      <div class="d-flex flex-wrap gap-2">
+        <span class="badge bg-light text-dark border px-3 py-2"><i class="bi bi-wifi me-1 text-primary"></i>WiFi</span>
+        <span class="badge bg-light text-dark border px-3 py-2"><i class="bi bi-cup-hot me-1 text-primary"></i>Desayuno</span>
+        <span class="badge bg-light text-dark border px-3 py-2"><i class="bi bi-tv me-1 text-primary"></i>Smart TV</span>
+        <span class="badge bg-light text-dark border px-3 py-2"><i class="bi bi-thermometer-sun me-1 text-primary"></i>A/C</span>
+        <span class="badge bg-light text-dark border px-3 py-2"><i class="bi bi-droplet me-1 text-primary"></i>Mini bar</span>
+      </div>
+    </div>
+
+    {% if habitacion.disponible %}
+      {% if user.is_authenticated %}
+        <a href="{% url 'crear_reserva_hab' habitacion.pk %}" class="btn btn-primary btn-lg w-100 py-3">
+          <i class="bi bi-calendar-plus me-2"></i>Reservar Ahora
+        </a>
+      {% else %}
+        <a href="{% url 'login' %}?next={% url 'crear_reserva_hab' habitacion.pk %}"
+           class="btn btn-primary btn-lg w-100 py-3">
+          <i class="bi bi-box-arrow-in-right me-2"></i>Inicia sesión para reservar
+        </a>
+      {% endif %}
+    {% else %}
+      <button class="btn btn-secondary btn-lg w-100 py-3" disabled>
+        <i class="bi bi-x-circle me-2"></i>No Disponible
+      </button>
+    {% endif %}
+    <a href="{% url 'lista_habitaciones' %}" class="btn btn-outline-secondary w-100 mt-2">
+      <i class="bi bi-arrow-left me-2"></i>Volver al Catálogo
+    </a>
+  </div>
+</div>
+{% endblock %}
