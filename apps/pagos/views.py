@@ -79,3 +79,4 @@ def comprobante_qr(request, reserva_id):
         'reserva': reserva,
         'pago': pago,
     })
+# Épica 3: Pagos y Confirmaciones — HU-07, HU-08, RF-06, RF-07
