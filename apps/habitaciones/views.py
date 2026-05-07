@@ -1,6 +1,8 @@
-from django.shortcuts import render, get_object_or_404
+cat > apps/habitaciones/views.py << 'EOF'
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import JsonResponse
 from django.views.decorators.http import require_GET
+from django.contrib.auth.decorators import login_required
 from .models import Habitacion
 from apps.reservas.models import Reserva
 from datetime import date, datetime
@@ -82,6 +84,10 @@ def lista_habitaciones(request):
 
 def detalle_habitacion(request, pk):
     habitacion = get_object_or_404(Habitacion, pk=pk)
+    # Si el usuario intenta reservar desde el detalle y no está autenticado,
+    # se redirige al login con el parámetro next para volver aquí después
+    if request.method == 'POST' and not request.user.is_authenticated:
+        return redirect(f"/accounts/login/?next=/reservas/nueva/{pk}/")
     return render(request, "habitaciones/detalle.html", {
         "habitacion": habitacion,
         "hoy": date.today().isoformat(),
@@ -90,6 +96,7 @@ def detalle_habitacion(request, pk):
 
 # ─── API REST INTERNA ─────────────────────────────────────────────────────────
 
+@login_required
 @require_GET
 def api_habitaciones_lista(request):
     """
@@ -125,6 +132,7 @@ def api_habitaciones_lista(request):
     })
 
 
+@login_required
 @require_GET
 def api_habitacion_detalle(request, pk):
     """
@@ -152,6 +160,7 @@ def api_habitacion_detalle(request, pk):
     })
 
 
+@login_required
 @require_GET
 def api_disponibilidad(request):
     """
@@ -163,14 +172,12 @@ def api_disponibilidad(request):
     fecha_entrada_str = request.GET.get("fecha_entrada")
     fecha_salida_str = request.GET.get("fecha_salida")
 
-    # Validar parámetros requeridos
     if not all([habitacion_id, fecha_entrada_str, fecha_salida_str]):
         return JsonResponse({
             "status": "error",
             "mensaje": "Parámetros requeridos: habitacion_id, fecha_entrada, fecha_salida",
         }, status=400)
 
-    # Validar formato de fechas
     try:
         fecha_entrada = datetime.strptime(fecha_entrada_str, "%Y-%m-%d").date()
         fecha_salida = datetime.strptime(fecha_salida_str, "%Y-%m-%d").date()
@@ -188,30 +195,8 @@ def api_disponibilidad(request):
 
     habitacion = get_object_or_404(Habitacion, pk=habitacion_id)
 
-    # Verificar si existe reserva confirmada o pendiente que se cruce con las fechas
     reservas_cruzadas = Reserva.objects.filter(
         habitacion=habitacion,
         estado__in=["confirmada", "pendiente"],
         fecha_entrada__lt=fecha_salida,
         fecha_salida__gt=fecha_entrada,
-    )
-
-    disponible = not reservas_cruzadas.exists()
-    noches = (fecha_salida - fecha_entrada).days
-
-    return JsonResponse({
-        "status": "ok",
-        "fuente": "Hotel Pacific Reef API v1.0",
-        "habitacion_id": habitacion.id,
-        "habitacion_numero": habitacion.numero,
-        "habitacion_tipo": habitacion.get_tipo_display(),
-        "fecha_entrada": fecha_entrada_str,
-        "fecha_salida": fecha_salida_str,
-        "noches": noches,
-        "disponible": disponible,
-        "precio_por_noche": int(habitacion.precio_por_noche),
-        "costo_total": int(habitacion.precio_por_noche) * noches if disponible else None,
-        "garantia_30_porciento": int(habitacion.precio_por_noche * noches * 3 / 10) if disponible else None,
-        "mensaje": "Habitación disponible para las fechas solicitadas" if disponible
-                   else "Habitación no disponible para las fechas solicitadas",
-    })
