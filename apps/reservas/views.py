@@ -1,3 +1,4 @@
+cat > apps/reservas/views.py << 'EOF'
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -56,3 +57,7 @@ def cancelar_reserva(request, reserva_id):
         return redirect('mis_reservas')
     return render(request, 'reservas/cancelar.html', {'reserva': reserva})
 # Épica 2: Registro de reserva por días — HU-06, RF-05
+# Seguridad: todas las vistas protegidas con @login_required
+# Un usuario no autenticado que intente acceder directamente por URL
+# será redirigido automáticamente al login (LOGIN_URL en settings.py)
+EOF
