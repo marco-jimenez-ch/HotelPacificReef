@@ -1,4 +1,3 @@
-cat > apps/reservas/views.py << 'EOF'
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -15,49 +14,44 @@ def crear_reserva(request, habitacion_id=None):
 
     initial = {}
     if habitacion:
-        initial['habitacion'] = habitacion
-    if request.GET.get('fecha_entrada'):
-        initial['fecha_entrada'] = request.GET['fecha_entrada']
-    if request.GET.get('fecha_salida'):
-        initial['fecha_salida'] = request.GET['fecha_salida']
+        initial["habitacion"] = habitacion
+    if request.GET.get("fecha_entrada"):
+        initial["fecha_entrada"] = request.GET["fecha_entrada"]
+    if request.GET.get("fecha_salida"):
+        initial["fecha_salida"] = request.GET["fecha_salida"]
 
     form = ReservaForm(request.POST or None, initial=initial)
     if form.is_valid():
         reserva = form.save(commit=False)
         reserva.cliente = request.user
         reserva.save()
-        messages.success(request, f'Reserva #{reserva.id} creada. Procede al pago de la garantía.')
-        return redirect('resumen_pago', reserva_id=reserva.id)
+        messages.success(request, "Reserva #" + str(reserva.id) + " creada. Procede al pago de la garantia.")
+        return redirect("resumen_pago", reserva_id=reserva.id)
 
-    return render(request, 'reservas/crear.html', {'form': form, 'habitacion': habitacion})
+    return render(request, "reservas/crear.html", {"form": form, "habitacion": habitacion})
 
 
 @login_required
 def mis_reservas(request):
-    reservas = Reserva.objects.filter(cliente=request.user).select_related('habitacion')
-    return render(request, 'reservas/mis_reservas.html', {'reservas': reservas})
+    reservas = Reserva.objects.filter(cliente=request.user).select_related("habitacion")
+    return render(request, "reservas/mis_reservas.html", {"reservas": reservas})
 
 
 @login_required
 def confirmacion_reserva(request, reserva_id):
     reserva = get_object_or_404(Reserva, pk=reserva_id, cliente=request.user)
-    return render(request, 'reservas/confirmacion.html', {'reserva': reserva})
+    return render(request, "reservas/confirmacion.html", {"reserva": reserva})
 
 
 @login_required
 def cancelar_reserva(request, reserva_id):
     reserva = get_object_or_404(Reserva, pk=reserva_id, cliente=request.user)
-    if reserva.estado not in ['confirmada', 'pendiente']:
-        messages.error(request, 'Esta reserva no puede cancelarse.')
-        return redirect('mis_reservas')
-    if request.method == 'POST':
-        reserva.estado = 'cancelada'
+    if reserva.estado not in ["confirmada", "pendiente"]:
+        messages.error(request, "Esta reserva no puede cancelarse.")
+        return redirect("mis_reservas")
+    if request.method == "POST":
+        reserva.estado = "cancelada"
         reserva.save()
-        messages.warning(request, f'Reserva #{reserva.id} cancelada.')
-        return redirect('mis_reservas')
-    return render(request, 'reservas/cancelar.html', {'reserva': reserva})
-# Épica 2: Registro de reserva por días — HU-06, RF-05
-# Seguridad: todas las vistas protegidas con @login_required
-# Un usuario no autenticado que intente acceder directamente por URL
-# será redirigido automáticamente al login (LOGIN_URL en settings.py)
-EOF
+        messages.warning(request, "Reserva #" + str(reserva.id) + " cancelada.")
+        return redirect("mis_reservas")
+    return render(request, "reservas/cancelar.html", {"reserva": reserva})
