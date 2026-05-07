@@ -1,3 +1,4 @@
+cat > apps/panel/views.py << 'EOF'
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -14,6 +15,9 @@ def es_admin(user):
 
 @login_required
 def dashboard(request):
+    # Protección doble: primero login, luego rol admin
+    # Acceder a /panel/ sin login redirige al login
+    # Acceder con login pero sin rol admin redirige a home
     if not es_admin(request.user):
         messages.error(request, 'Acceso restringido al panel administrativo.')
         return redirect('home')
@@ -48,6 +52,7 @@ def dashboard(request):
 
 @login_required
 def reportes(request):
+    # Protección doble: primero login, luego rol admin
     if not es_admin(request.user):
         messages.error(request, 'Acceso restringido al panel administrativo.')
         return redirect('home')
@@ -69,3 +74,6 @@ def reportes(request):
         'ingresos_por_tipo': ingresos_por_tipo,
     })
 # Épica 4: Administración y Reportes — HU-09, HU-10, HU-11, RF-08, RF-10, RF-11
+# Seguridad: protección doble — @login_required + verificación de rol admin
+# Copiar/pegar la URL sin estar autenticado redirige al login automáticamente
+EOF
