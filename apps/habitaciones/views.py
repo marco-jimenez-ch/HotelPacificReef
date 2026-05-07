@@ -28,13 +28,8 @@ def obtener_clima():
                 2: ("Parcialmente nublado", "Parcial"),
                 3: ("Nublado", "Nublado"),
                 45: ("Neblina", "Neblina"),
-                48: ("Neblina con escarcha", "Neblina"),
                 51: ("Llovizna leve", "Llovizna"),
-                53: ("Llovizna moderada", "Llovizna"),
                 61: ("Lluvia leve", "Lluvia"),
-                63: ("Lluvia moderada", "Lluvia"),
-                65: ("Lluvia intensa", "Lluvia"),
-                71: ("Nieve leve", "Nieve"),
                 80: ("Chubascos", "Chubascos"),
                 95: ("Tormenta", "Tormenta"),
             }
@@ -82,8 +77,8 @@ def lista_habitaciones(request):
 
 def detalle_habitacion(request, pk):
     habitacion = get_object_or_404(Habitacion, pk=pk)
-    if request.method == 'POST' and not request.user.is_authenticated:
-        return redirect(f"/accounts/login/?next=/reservas/nueva/{pk}/")
+    if request.method == "POST" and not request.user.is_authenticated:
+        return redirect("/accounts/login/?next=/reservas/nueva/" + str(pk) + "/")
     return render(request, "habitaciones/detalle.html", {
         "habitacion": habitacion,
         "hoy": date.today().isoformat(),
@@ -110,12 +105,7 @@ def api_habitaciones_lista(request):
         }
         for h in habitaciones
     ]
-    return JsonResponse({
-        "status": "ok",
-        "fuente": "Hotel Pacific Reef API v1.0",
-        "total": len(data),
-        "habitaciones": data,
-    })
+    return JsonResponse({"status": "ok", "total": len(data), "habitaciones": data})
 
 
 @login_required
@@ -132,11 +122,7 @@ def api_habitacion_detalle(request, pk):
         "descripcion": habitacion.descripcion,
         "disponible": habitacion.disponible,
     }
-    return JsonResponse({
-        "status": "ok",
-        "fuente": "Hotel Pacific Reef API v1.0",
-        "habitacion": data,
-    })
+    return JsonResponse({"status": "ok", "habitacion": data})
 
 
 @login_required
@@ -147,11 +133,36 @@ def api_disponibilidad(request):
     fecha_salida_str = request.GET.get("fecha_salida")
 
     if not all([habitacion_id, fecha_entrada_str, fecha_salida_str]):
-        return JsonResponse({
-            "status": "error",
-            "mensaje": "Parametros requeridos: habitacion_id, fecha_entrada, fecha_salida",
-        }, status=400)
+        return JsonResponse({"status": "error", "mensaje": "Parametros requeridos"}, status=400)
 
     try:
         fecha_entrada = datetime.strptime(fecha_entrada_str, "%Y-%m-%d").date()
-        fecha_salida = datetime.strptime
+        fecha_salida = datetime.strptime(fecha_salida_str, "%Y-%m-%d").date()
+    except ValueError:
+        return JsonResponse({"status": "error", "mensaje": "Formato invalido. Use YYYY-MM-DD"}, status=400)
+
+    if fecha_salida <= fecha_entrada:
+        return JsonResponse({"status": "error", "mensaje": "Fecha salida debe ser posterior"}, status=400)
+
+    habitacion = get_object_or_404(Habitacion, pk=habitacion_id)
+
+    reservas_cruzadas = Reserva.objects.filter(
+        habitacion=habitacion,
+        estado__in=["confirmada", "pendiente"],
+        fecha_entrada__lt=fecha_salida,
+        fecha_salida__gt=fecha_entrada,
+    )
+
+    disponible = not reservas_cruzadas.exists()
+    noches = (fecha_salida - fecha_entrada).days
+
+    return JsonResponse({
+        "status": "ok",
+        "habitacion_id": habitacion.id,
+        "noches": noches,
+        "disponible": disponible,
+        "precio_por_noche": int(habitacion.precio_por_noche),
+        "costo_total": int(habitacion.precio_por_noche) * noches if disponible else None,
+        "garantia_30_porciento": int(habitacion.precio_por_noche * noches * 3 / 10) if disponible else None,
+        "mensaje": "Disponible" if disponible else "No disponible",
+    })
