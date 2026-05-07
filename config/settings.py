@@ -6,6 +6,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY', default='django-insecure-cambia-esta-clave-en-produccion')
 DEBUG = config('DEBUG', default=True, cast=bool)
 ALLOWED_HOSTS = ['*']
+CSRF_TRUSTED_ORIGINS = ['https://hotelpacificreef-app.azurewebsites.net', 'https://*.azurewebsites.net']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
