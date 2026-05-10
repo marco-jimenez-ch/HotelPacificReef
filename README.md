@@ -36,10 +36,10 @@ control de ocupación.
 
 | Tecnología | Versión | Uso |
 |---|---|---|
-| React.js | v18.x | Front-end responsivo |
-| Node.js / Express | v20.x LTS | Back-end y lógica de negocio |
+| Python / Django | 4.x | Back-end y lógica de negocio |
+| HTML / CSS / JS | — | Front-end con templates Django |
 | PostgreSQL | 15+ | Base de datos relacional |
-| AWS EC2 / RDS | — | Infraestructura en la nube |
+| Railway | — | Despliegue en la nube (app + BD) |
 | GitHub | — | Control de versiones |
 
 ## Estructura del Repositorio
@@ -70,14 +70,7 @@ Proyecto-HotelPacificReef/
 | E3 | Pagos y Confirmaciones | Sprint 3 |
 | E4 | Administración y Reportes | Sprint 3 |
 
-### Estado actual
-- ✅ ERS completado
-- ✅ Project Burndown v2
-- ✅ Sprint Backlog definido
-- ✅ Roadmap en Miro
-- ✅ Tablero Trello configurado
-- ✅ Diagrama de Caso de Uso
-- ⏳ Desarrollo en Sprint 1
+
 
 ## Enlaces del Proyecto
 
@@ -135,15 +128,15 @@ python manage.py runserver
 
 ## URLs del sistema
 
-| URL | Descripción |
-|-----|-------------|
-| `http://localhost:8000/` | Página de inicio |
-| `http://localhost:8000/habitaciones/` | Catálogo de habitaciones |
-| `http://localhost:8000/accounts/login/` | Iniciar sesión |
-| `http://localhost:8000/accounts/registro/` | Crear cuenta |
-| `http://localhost:8000/reservas/` | Mis reservas |
-| `http://localhost:8000/panel/` | Dashboard admin |
-| `http://localhost:8000/admin/` | Admin Django |
+| URL Local | URL Producción | Descripción |
+|-----------|---------------|-------------|
+| `http://localhost:8000/` | `https://hotelpacificreef.up.railway.app/` | Página de inicio |
+| `http://localhost:8000/habitaciones/` | `https://hotelpacificreef.up.railway.app/habitaciones/` | Catálogo de habitaciones |
+| `http://localhost:8000/accounts/login/` | `https://hotelpacificreef.up.railway.app/accounts/login/` | Iniciar sesión |
+| `http://localhost:8000/accounts/registro/` | `https://hotelpacificreef.up.railway.app/accounts/registro/` | Crear cuenta |
+| `http://localhost:8000/reservas/` | `https://hotelpacificreef.up.railway.app/reservas/` | Mis reservas |
+| `http://localhost:8000/panel/` | `https://hotelpacificreef.up.railway.app/panel/` | Dashboard admin |
+| `http://localhost:8000/admin/` | `https://hotelpacificreef.up.railway.app/admin/` | Admin Django |
 
 ## Épicas del Sprint
 
