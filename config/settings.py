@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     'apps.pagos',
     'apps.panel',
     'anymail',
+    'anymail',
 ]
 
 MIDDLEWARE = [
@@ -121,3 +122,8 @@ ANYMAIL = {
 EMAIL_BACKEND = config('EMAIL_BACKEND', default='anymail.backends.brevo.EmailBackend')
 DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='Hotel Pacific Reef <aacc70001@smtp-brevo.com>')
 SERVER_EMAIL = DEFAULT_FROM_EMAIL
+
+# Anymail - Brevo API
+ANYMAIL = {
+    "BREVO_API_KEY": config('BREVO_API_KEY', default=''),
+}
