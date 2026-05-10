@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     'apps.reservas',
     'apps.pagos',
     'apps.panel',
+    'anymail',
 ]
 
 MIDDLEWARE = [
@@ -112,3 +113,11 @@ EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
 EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
 DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='Hotel Pacific Reef <noreply@pacificreef.cl>')
+
+# Anymail - Brevo API (reemplaza configuración SMTP)
+ANYMAIL = {
+    "BREVO_API_KEY": config('BREVO_API_KEY', default=''),
+}
+EMAIL_BACKEND = config('EMAIL_BACKEND', default='anymail.backends.brevo.EmailBackend')
+DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='Hotel Pacific Reef <aacc70001@smtp-brevo.com>')
+SERVER_EMAIL = DEFAULT_FROM_EMAIL
