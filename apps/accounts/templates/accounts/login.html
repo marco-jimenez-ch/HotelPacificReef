@@ -16,6 +16,14 @@
         <p class="text-white-50 small mb-0">Inicia sesión en tu cuenta</p>
       </div>
       <div class="p-4 bg-white">
+        {% if messages %}
+          {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+              {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+          {% endfor %}
+        {% endif %}
         <form method="post" novalidate>
           {% csrf_token %}
           <div class="mb-3">
@@ -26,13 +34,18 @@
                      placeholder="correo@ejemplo.com" required autofocus>
             </div>
           </div>
-          <div class="mb-4">
+          <div class="mb-1">
             <label for="password" class="form-label">Contraseña</label>
             <div class="input-group">
               <span class="input-group-text"><i class="bi bi-lock"></i></span>
               <input type="password" name="password" id="password" class="form-control"
                      placeholder="Tu contraseña" required>
             </div>
+          </div>
+          <div class="text-end mb-4">
+            <a href="{% url 'password_reset' %}" class="text-decoration-none small text-muted">
+              ¿Olvidaste tu contraseña?
+            </a>
           </div>
           <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold">
             <i class="bi bi-box-arrow-in-right me-2"></i>Ingresar
